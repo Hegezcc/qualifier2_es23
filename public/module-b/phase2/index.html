@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EuroSkills Concerts</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+    <header>
+        <h2>EuroSkills Concerts</h2>
+        <div class="tickets">
+            <p>Already booked?</p>
+            <button @click="page = 'tickets'">Get Tickets</button>
+        </div>
+    </header>
+    <section id="land" v-if="page === 'land'">
+        <h1>Checkout these amazing concerts in Graz.</h1>
+        <div class="selectors">
+            <select v-model="land.artist">
+                <option value="" selected>Artist</option>
+                <option v-for="a of artists" :key="a">{{a}}</option>
+            </select>
+            <select v-model="land.location">
+                <option value="" selected>Location</option>
+                <option v-for="l of locations" :key="l">{{l}}</option>
+            </select>
+            <input type="date" v-model="land.date">
+            <input type="button" value="Clear" @click="filter_clear" v-if="land.artist !== '' || land.location !== '' || land.date !== ''" />
+        </div>
+        <div class="cards" v-if="land.concerts === null">
+            <p>Loading concerts...</p>
+        </div>
+        <div class="cards" v-else-if="filtered.length === 0">
+            <p>No shows are matching the current filter criteria.</p>
+        </div>
+        <div class="cards" v-else>
+            <div class="card" v-for="c in filtered" :key="c.id" @click="select_card(c.id)">
+                <p>{{c.shows[0].start.split('T')[0].split('-').reverse().join('/')}}</p>
+                <h3>{{c.artist}}</h3>
+                <p>{{c.location.name}}</p>
+                <p>{{c.shows[0].start.split('T')[1].split(':').splice(0, 2).join(':')}} - {{c.shows[0].end.split('T')[1].split(':').splice(0, 2).join(':')}}</p>
+            </div>
+        </div>
+    </section>
+    <section id="book" v-if="page === 'book'">
+        <h1>Book seats for your show</h1>
+        <div class="card">
+            <p>{{book.concert.shows[0].start.split('T')[0].split('-').reverse().join('/')}}</p>
+            <h3>{{book.concert.artist}}</h3>
+            <p>{{book.concert.location.name}}</p>
+            <p>{{book.concert.shows[0].start.split('T')[1].split(':').splice(0, 2).join(':')}} - {{book.concert.shows[0].end.split('T')[1].split(':').splice(0, 2).join(':')}}</p>
+        </div>
+        <div class="area">
+            <div class="stage">Stage</div>
+            <div class="seats">
+                <div class="row" v-for="r of book.rows" :key="r.id">
+                    <p>{{r.name}}</p>
+                    <div class="seat" v-for="s in r.seats.total" :data-row="r.id" :data-seat="s" :class="{'seat-unavailable': r.seats.unavailable.includes(s), 'seat-selected': book.selected.includes(r.id + '-' + s), 'seat-available': !r.seats.unavailable.includes(s) && !book.selected.includes(r.id + '-' + s)}" @click="select_seat(r, s)"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="details" v-if="page === 'details'">
+        <h1>Book seats for your show</h1>
+    </section>
+    <section id="tickets" v-if="page === 'tickets'">
+        <h1>Your tickets are ready!</h1>
+    </section>
+    <section id="retrieve" v-if="page === 'retrieve'">
+        <h1>Retrieve your tickets.</h1>
+    </section>
+</main>
+    
+<script src="script.js"></script>
+</body>
+</html>

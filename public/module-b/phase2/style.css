@@ -1,0 +1,41 @@
+.seats .row {
+    display: flex;
+}
+
+.seat {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    border: 0.1rem solid black;
+    margin: 0.25rem;
+}
+
+.seat-available {
+    background: lightreen;
+}
+
+.seat-unavailable {
+    background: lightcoral;
+}
+
+.seat-selected {
+    background: lightblue;
+}
+
+header {
+    display: flex;
+}
+
+header .tickets {
+    margin-left: auto;
+    display: flex;
+}
+
+body {
+    text-align: center;
+}
+
+#land .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
